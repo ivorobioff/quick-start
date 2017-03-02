@@ -1,0 +1,12 @@
+{
+    "name": "immediate-solutions/support",
+    "description": "The framework agnostic libraries",
+    "type": "libraries",
+    "authors": [
+        {
+            "name": "ivorobioff",
+            "email": "igor.vorobioff@gmail.com"
+        }
+    ],
+    "require": {}
+}
