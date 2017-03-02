@@ -9,6 +9,7 @@
             "email": "igor.vorobioff@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.6.4",
         "psr/log": "^1.0",
