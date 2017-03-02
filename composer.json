@@ -1,6 +1,7 @@
 {
     "name": "immediate-solutions/support",
     "description": "The framework agnostic libraries",
+    "license": "MIT",
     "type": "libraries",
     "authors": [
         {
