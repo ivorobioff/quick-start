@@ -24,7 +24,7 @@ use Closure;
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
  */
-abstract class Processor
+abstract class AbstractProcessor
 {
     /**
      * @var ErrorsThrowableCollection
