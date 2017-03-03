@@ -16,7 +16,7 @@ trait SortableTrait
 	public function createSortables()
 	{
         /**
-         * @var SearchableProcessor $this
+         * @var AbstractSearchableProcessor $this
          */
 
 		$query = $this->get('orderBy');
