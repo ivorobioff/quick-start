@@ -11,6 +11,16 @@ interface DescriberInterface
 	 * @return string
 	 */
 	public function getEntityNamespace($package);
+
+	/**
+	 * @param string $package
+	 * @return string
+	 */
 	public function getMetadataNamespace($package);
+
+	/**
+	 * @param string $package
+	 * @return string
+	 */
 	public function getEntityPath($package);
 }
