@@ -26,199 +26,207 @@ use Closure;
  */
 abstract class AbstractProcessor
 {
-    /**
-     * @var ErrorsThrowableCollection
-     */
-    private $errors;
+	/**
+	 * @var ErrorsThrowableCollection
+	 */
+	private $errors;
 
-    /**
-     * @param object $object
-     * @param string $property
-     * @param callable $modifier
-     * @param bool $nullable
-     */
-    protected function set($object, $property, callable $modifier = null, $nullable = true)
-    {
-        if (!$this->has($property)){
-            return ;
-        }
+	/**
+	 * @param object $object
+	 * @param string $property
+	 * @param callable $modifier
+	 * @param bool $nullable
+	 */
+	protected function set($object, $property, callable $modifier = null, $nullable = true)
+	{
+		$source = $property;
+		$target = $property;
 
-        $value = $this->get($property);
+		if (is_array($property)){
+			$source = key($property);
+			$target = current($property);
+		}
 
-        if (!$nullable && $value === null){
-            return ;
-        }
+		if (!$this->has($source)){
+			return ;
+		}
 
-        $accessor = PropertyAccess::createPropertyAccessor();
+		$value = $this->get($source);
 
-        if ($modifier !== null){
-            $value = $modifier($value);
-        }
+		if (!$nullable && $value === null){
+			return ;
+		}
 
-        $accessor->setValue($object, $property, $value);
+		$accessor = PropertyAccess::createPropertyAccessor();
 
-        if ($value === null && $object instanceof ClearableAwareInterface){
-            $object->addClearable($property);
-        }
-    }
+		if ($modifier !== null){
+			$value = $modifier($value);
+		}
 
-    /**
-     * @param string $class
-     * @return Closure
-     */
-    protected function asEnum($class)
-    {
-        return function($value) use ($class){
-            if ($value === null){
-                return null;
-            }
+		$accessor->setValue($object, $target, $value);
 
-            return new $class($value);
-        };
-    }
+		if ($value === null && $object instanceof ClearableAwareInterface){
+			$object->addClearable($target);
+		}
+	}
 
-    /**
-     * @param string $path
-     * @param mixed $default
-     * @return mixed
-     */
-    protected function get($path, $default = null)
-    {
-        return array_get($this->getData(), $path, $default);
-    }
+	/**
+	 * @param string $class
+	 * @return Closure
+	 */
+	protected function asEnum($class)
+	{
+		return function($value) use ($class){
+			if ($value === null){
+				return null;
+			}
 
-    /**
-     * @param string $path
-     * @return bool
-     */
-    protected function has($path)
-    {
-        return array_has($this->getData(), $path);
-    }
+			return new $class($value);
+		};
+	}
 
-    /**
-     * @return array
-     */
-    public abstract function getData();
+	/**
+	 * @param string $path
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	protected function get($path, $default = null)
+	{
+		return array_get($this->getData(), $path, $default);
+	}
 
-    public function validate()
-    {
-        $errors = $this->getErrors();
+	/**
+	 * @param string $path
+	 * @return bool
+	 */
+	protected function has($path)
+	{
+		return array_has($this->getData(), $path);
+	}
 
-        if (count($errors) > 0){
-            throw $errors;
-        }
-    }
+	/**
+	 * @return array
+	 */
+	public abstract function getData();
 
-    /**
-     * @return array
-     */
-    protected function schema()
-    {
-        return [];
-    }
+	public function validate()
+	{
+		$errors = $this->getErrors();
 
-    /**
-     * @return ErrorsThrowableCollection
-     */
-    public function getErrors()
-    {
-        if ($this->errors === null) {
+		if (count($errors) > 0){
+			throw $errors;
+		}
+	}
 
-            $binder = new Binder();
-            $this->rules($binder);
+	/**
+	 * @return array
+	 */
+	protected function schema()
+	{
+		return [];
+	}
 
-            $this->errors = (new Performer())->perform($binder, new ArraySourceHandler($this->getData()));
-        }
+	/**
+	 * @return ErrorsThrowableCollection
+	 */
+	public function getErrors()
+	{
+		if ($this->errors === null) {
 
-        return $this->errors;
-    }
+			$binder = new Binder();
+			$this->rules($binder);
 
-    /**
-     * @param Binder $binder
-     */
-    protected function rules(Binder $binder)
-    {
-        foreach ($this->schema() as $name => $rule) {
+			$this->errors = (new Performer())->perform($binder, new ArraySourceHandler($this->getData()));
+		}
 
-            $binder->bind($name, $this->createRootInflator($rule));
-        }
-    }
+		return $this->errors;
+	}
 
-    /**
-     * @param string|array $rule
-     * @return callable
-     */
-    private function createRootInflator($rule)
-    {
-        return function (Property $property) use($rule) {
+	/**
+	 * @param Binder $binder
+	 */
+	protected function rules(Binder $binder)
+	{
+		foreach ($this->schema() as $name => $rule) {
 
-            if (is_string($rule) && ends_with($rule, '[]')){
-                $rule = [cut_string_right($rule, '[]')];
-            }
+			$binder->bind($name, $this->createRootInflator($rule));
+		}
+	}
 
-            if (is_array($rule) && count($rule) === 1 && array_key_exists(0, $rule)){
-                $property->addRule(new Each(function() use ($rule){
-                    return $this->resolveRule(current($rule));
-                }));
-            } else {
-                $property->addRule($this->resolveRule($rule));
-            }
-        };
-    }
+	/**
+	 * @param string|array $rule
+	 * @return callable
+	 */
+	private function createRootInflator($rule)
+	{
+		return function (Property $property) use($rule) {
 
-    /**
-     *
-     * @param mixed $rule
-     * @return RuleInterface
-     */
-    private function resolveRule($rule)
-    {
-        if (is_string($rule)) {
-            $rule = $this->mapRules()[$rule];
-        }
+			if (is_string($rule) && ends_with($rule, '[]')){
+				$rule = [cut_string_right($rule, '[]')];
+			}
 
-        if (is_callable($rule)) {
-            return call_user_func($rule);
-        }
+			if (is_array($rule) && count($rule) === 1 && array_key_exists(0, $rule)){
+				$property->addRule(new Each(function() use ($rule){
+					return $this->resolveRule(current($rule));
+				}));
+			} else {
+				$property->addRule($this->resolveRule($rule));
+			}
+		};
+	}
 
-        if (is_object($rule)) {
-            return $rule;
-        }
+	/**
+	 *
+	 * @param mixed $rule
+	 * @return RuleInterface
+	 */
+	private function resolveRule($rule)
+	{
+		if (is_string($rule)) {
+			$rule = $this->mapRules()[$rule];
+		}
 
-        if (is_string($rule)) {
-            return new $rule();
-        }
+		if (is_callable($rule)) {
+			return call_user_func($rule);
+		}
 
-        if (is_array($rule)) {
-            return new Walk(function (Binder $binder) use($rule) {
-                foreach ($rule as $key => $value) {
-                    $binder->bind($key, $this->createRootInflator($value));
-                }
-            });
-        }
+		if (is_object($rule)) {
+			return $rule;
+		}
 
-        throw new RuntimeException('Unable to resolve a validation rule.');
-    }
+		if (is_string($rule)) {
+			return new $rule();
+		}
 
-    /**
-     *
-     * @return array
-     */
-    protected function mapRules()
-    {
-        return [
-            'string' => StringCast::class,
-            'bool' => BooleanCast::class,
-            'int' => IntegerCast::class,
-            'float' => FloatCast::class,
-            'datetime' => Moment::class,
-            'document' => DocumentMixedIdentifier::class,
-            'array' => (new Callback(function($v){
-                return is_array($v);
-            }))
-                ->setIdentifier('cast')
-                ->setMessage('The field should be an array.')
-        ];
-    }
+		if (is_array($rule)) {
+			return new Walk(function (Binder $binder) use($rule) {
+				foreach ($rule as $key => $value) {
+					$binder->bind($key, $this->createRootInflator($value));
+				}
+			});
+		}
+
+		throw new RuntimeException('Unable to resolve a validation rule.');
+	}
+
+	/**
+	 *
+	 * @return array
+	 */
+	protected function mapRules()
+	{
+		return [
+			'string' => StringCast::class,
+			'bool' => BooleanCast::class,
+			'int' => IntegerCast::class,
+			'float' => FloatCast::class,
+			'datetime' => Moment::class,
+			'document' => DocumentMixedIdentifier::class,
+			'array' => (new Callback(function($v){
+				return is_array($v);
+			}))
+				->setIdentifier('cast')
+				->setMessage('The field should be an array.')
+		];
+	}
 }
