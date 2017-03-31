@@ -28,6 +28,10 @@ class Exchanger
 			}
 
 			$accessor->setValue($target, $property, $value);
+
+			if ($value === null && $target instanceof ClearableAwareInterface){
+				$target->addClearable($property);
+			}
 		}
 	}
 }
