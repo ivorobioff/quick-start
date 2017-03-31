@@ -3,9 +3,8 @@ namespace ImmediateSolutions\Support\Core\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use ImmediateSolutions\Support\Core\Interfaces\ContainerInterface;
+use ImmediateSolutions\Support\Core\Support\Exchanger;
 use Psr\Log\LoggerInterface;
-use ImmediateSolutions\Support\Validation\Source\ClearableAwareInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
@@ -52,18 +51,6 @@ abstract class AbstractService
      */
     protected function transfer($source, $target, $property, callable $modifier = null)
     {
-        $accessor = PropertyAccess::createPropertyAccessor();
-
-        $value = $accessor->getValue($source, $property);
-
-        if ($value !== null
-            || ($source instanceof ClearableAwareInterface && $source->isClearable($property))){
-
-            if ($modifier !== null){
-                $value = $modifier($value);
-            }
-
-            $accessor->setValue($target, $property, $value);
-        }
+		Exchanger::transfer($source, $target, $property, $modifier);
     }
 }
