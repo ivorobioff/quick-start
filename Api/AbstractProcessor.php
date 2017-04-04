@@ -20,6 +20,7 @@ use RuntimeException;
 use ImmediateSolutions\Support\Validation\Source\ClearableAwareInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Closure;
+use DateTime;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
@@ -82,6 +83,20 @@ abstract class AbstractProcessor
 			}
 
 			return new $class($value);
+		};
+	}
+
+	/**
+	 * @return Closure
+	 */
+	protected function asDateTime()
+	{
+		return function($value){
+			if ($value === null){
+				return null;
+			}
+
+			return new DateTime($value);
 		};
 	}
 
