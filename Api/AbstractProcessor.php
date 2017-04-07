@@ -21,6 +21,7 @@ use ImmediateSolutions\Support\Validation\Source\ClearableAwareInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Closure;
 use DateTime;
+use DateTimeZone;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
@@ -96,7 +97,7 @@ abstract class AbstractProcessor
 				return null;
 			}
 
-			return new DateTime($value);
+			return new DateTime($value, new DateTimeZone('UTC'));
 		};
 	}
 
