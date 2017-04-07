@@ -97,7 +97,10 @@ abstract class AbstractProcessor
 				return null;
 			}
 
-			return new DateTime($value, new DateTimeZone('UTC'));
+			$datetime = new DateTime($value);
+			$datetime->setTimezone(new DateTimeZone('UTC'));
+
+			return $datetime;
 		};
 	}
 
