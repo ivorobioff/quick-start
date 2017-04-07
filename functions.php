@@ -164,6 +164,21 @@ function parse_url_query($query)
 	return $data;
 }
 
+/**
+ * @param array $data
+ * @param callable $callback
+ * @return array
+ */
+function array_define_keys(array $data, callable $callback) {
+	$result = [];
+
+	foreach ($data as $item){
+		$result[$callback($item)] = $item;
+	}
+
+	return $result;
+}
+
 /*
 | -------------------------------------------------------------------
 | ALIASES OF METHODS IN THE "DEBUG" CLASS
