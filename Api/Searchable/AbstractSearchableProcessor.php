@@ -107,7 +107,7 @@ abstract class AbstractSearchableProcessor
 		$config = $this->resolveConfig($config, $value);
 		$type =  array_get($config, 'type');
 
-		if ($value === null && trim($value) === '') {
+		if ($value === null || trim($value) === '') {
 			return null;
 		}
 
