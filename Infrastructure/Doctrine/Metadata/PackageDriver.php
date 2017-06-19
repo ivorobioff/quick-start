@@ -85,6 +85,8 @@ class PackageDriver implements MappingDriver, MetadataClassesProvidableInterface
     {
         if ($this->metadataClasses === null) {
 
+            $this->metadataClasses = [];
+
             foreach ($this->searchMetadataClasses() as $entityClass => $metadataClass) {
                 $this->metadataClasses[$entityClass] = $metadataClass;
             }
