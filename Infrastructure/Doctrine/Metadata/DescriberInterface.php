@@ -12,6 +12,12 @@ interface DescriberInterface
 	 */
 	public function getEntityNamespace($package);
 
+    /**
+     * @param string $package
+     * @return string
+     */
+    public function getTypeNamespace($package);
+
 	/**
 	 * @param string $package
 	 * @return string
@@ -23,4 +29,10 @@ interface DescriberInterface
 	 * @return string
 	 */
 	public function getEntityPath($package);
+
+    /**
+     * @param string $package
+     * @return string
+     */
+	public function getTypePath($package);
 }
