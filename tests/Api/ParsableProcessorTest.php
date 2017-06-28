@@ -1,7 +1,7 @@
 <?php
 namespace ImmediateSolutions\Support\Tests\Api;
 
-use ImmediateSolutions\Support\Api\Inbound\AbstractFormProcessor;
+use ImmediateSolutions\Support\Api\AbstractParsableProcessor;
 use ImmediateSolutions\Support\Validation\Rules\Enum;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
  */
-class FormProcessorTest extends TestCase
+class ParsableProcessorTest extends TestCase
 {
     public function testCastData()
     {
@@ -80,26 +80,26 @@ class FormProcessorTest extends TestCase
 
 
     /**
-     * @param array|string $data
-     * @return AbstractFormProcessor
+     * @param array|string $content
+     * @return AbstractParsableProcessor
      */
-    private function createProcessorMock($data, $contentType)
+    private function createProcessorMock($content, $contentType)
     {
-        return new class($data, $contentType) extends AbstractFormProcessor {
+        return new class($content, $contentType) extends AbstractParsableProcessor {
 
             /**
              * @var array|string
              */
-            private $data;
+            private $content;
 
             /**
              * @var string
              */
             private $contentType;
 
-            public function __construct($data, $contentType)
+            public function __construct($content, $contentType)
             {
-                $this->data = $data;
+                $this->content = $content;
                 $this->contentType = $contentType;
             }
 
@@ -125,11 +125,11 @@ class FormProcessorTest extends TestCase
             }
 
             /**
-             * @return array
+             * @return string|array
              */
-            protected function getUnprocessedData()
+            protected function getContent()
             {
-                return $this->data;
+                return $this->content;
             }
 
             /**

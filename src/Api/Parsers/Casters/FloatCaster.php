@@ -1,12 +1,12 @@
 <?php
-namespace ImmediateSolutions\Support\Api\Inbound\Casters;
+namespace ImmediateSolutions\Support\Api\Parsers\Casters;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
  */
-class IntCaster implements CasterInterface
+class FloatCaster implements CasterInterface
 {
-    const HINT = 'int';
+    const HINT = 'float';
 
     /**
      * @param mixed $value
@@ -15,7 +15,7 @@ class IntCaster implements CasterInterface
      */
     public function canCast($value, $hint)
     {
-        return $hint === self::HINT && ctype_digit($value);
+        return $hint === self::HINT && preg_match('/^[0-9]+(\.[0-9]+)?$/', $value) > 0;
     }
 
     /**
@@ -25,6 +25,6 @@ class IntCaster implements CasterInterface
      */
     public function cast($value, $hint)
     {
-        return (int) $value;
+        return (float) $value;
     }
 }

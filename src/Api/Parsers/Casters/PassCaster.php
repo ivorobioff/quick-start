@@ -1,13 +1,11 @@
 <?php
-namespace ImmediateSolutions\Support\Api\Inbound\Casters;
+namespace ImmediateSolutions\Support\Api\Parsers\Casters;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
  */
-class FloatCaster implements CasterInterface
+class PassCaster implements CasterInterface
 {
-    const HINT = 'float';
-
     /**
      * @param mixed $value
      * @param mixed $hint
@@ -15,7 +13,7 @@ class FloatCaster implements CasterInterface
      */
     public function canCast($value, $hint)
     {
-        return $hint === self::HINT && preg_match('/^[0-9]+(\.[0-9]+)?$/', $value) > 0;
+        return true;
     }
 
     /**
@@ -25,6 +23,6 @@ class FloatCaster implements CasterInterface
      */
     public function cast($value, $hint)
     {
-        return (float) $value;
+        return $value;
     }
 }
