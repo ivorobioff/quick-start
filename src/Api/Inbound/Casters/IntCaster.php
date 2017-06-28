@@ -1,11 +1,13 @@
 <?php
-namespace ImmediateSolutions\Support\Api\Casters;
+namespace ImmediateSolutions\Support\Api\Inbound\Casters;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
  */
-class PassCaster implements CasterInterface
+class IntCaster implements CasterInterface
 {
+    const HINT = 'int';
+
     /**
      * @param mixed $value
      * @param mixed $hint
@@ -13,7 +15,7 @@ class PassCaster implements CasterInterface
      */
     public function canCast($value, $hint)
     {
-        return true;
+        return $hint === self::HINT && ctype_digit($value);
     }
 
     /**
@@ -23,6 +25,6 @@ class PassCaster implements CasterInterface
      */
     public function cast($value, $hint)
     {
-        return $value;
+        return (int) $value;
     }
 }

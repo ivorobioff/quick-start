@@ -1,5 +1,5 @@
 <?php
-namespace ImmediateSolutions\Support\Api\Casters;
+namespace ImmediateSolutions\Support\Api\Inbound\Casters;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>

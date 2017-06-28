@@ -1,7 +1,7 @@
 <?php
 namespace ImmediateSolutions\Support\Tests\Api;
 
-use ImmediateSolutions\Support\Api\AbstractFormProcessor;
+use ImmediateSolutions\Support\Api\Inbound\AbstractFormProcessor;
 use ImmediateSolutions\Support\Validation\Rules\Enum;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
@@ -50,7 +50,7 @@ class FormProcessorTest extends TestCase
         Assert::assertEquals('test1', $data['field7']['test1']);
         Assert::assertEquals('test2', $data['field7']['test2']);
 
-        $processor = $this->createProcessorMock([
+        $processor = $this->createProcessorMock(json_encode([
             'field1' => 'some text',
             'field2a' => true,
             'field2b' => false,
@@ -62,7 +62,7 @@ class FormProcessorTest extends TestCase
                 'test1' => 'test1',
                 'test2' => 'test2'
             ]
-        ], 'application/json');
+        ]), 'application/json');
 
         $data = $processor->getData();
 
@@ -80,15 +80,15 @@ class FormProcessorTest extends TestCase
 
 
     /**
-     * @param array $data
+     * @param array|string $data
      * @return AbstractFormProcessor
      */
-    private function createProcessorMock(array $data, $contentType)
+    private function createProcessorMock($data, $contentType)
     {
         return new class($data, $contentType) extends AbstractFormProcessor {
 
             /**
-             * @var array
+             * @var array|string
              */
             private $data;
 
@@ -97,7 +97,7 @@ class FormProcessorTest extends TestCase
              */
             private $contentType;
 
-            public function __construct(array $data, $contentType)
+            public function __construct($data, $contentType)
             {
                 $this->data = $data;
                 $this->contentType = $contentType;
