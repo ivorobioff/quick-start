@@ -34,7 +34,7 @@ abstract class AbstractParsableProcessor extends AbstractProcessor
     protected function getParsers()
     {
         return [
-            new JsonParser($this->getContent()),
+            new JsonParser(),
             new FormParser($this->schema())
         ];
     }
