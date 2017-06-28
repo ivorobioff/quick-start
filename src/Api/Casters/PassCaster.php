@@ -1,22 +1,28 @@
 <?php
-namespace ImmediateSolutions\Support\Cast;
+namespace ImmediateSolutions\Support\Api\Casters;
+
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
  */
-interface CasterInterface
+class PassCaster implements CasterInterface
 {
     /**
      * @param mixed $value
      * @param mixed $hint
      * @return int
      */
-    public function canCast($value, $hint);
+    public function canCast($value, $hint)
+    {
+        return true;
+    }
 
     /**
      * @param mixed $value
      * @param mixed $hint
      * @return mixed
      */
-    public function cast($value, $hint);
-
+    public function cast($value, $hint)
+    {
+        return $value;
+    }
 }

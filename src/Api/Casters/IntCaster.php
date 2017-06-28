@@ -1,7 +1,5 @@
 <?php
-namespace ImmediateSolutions\Support\Cast\Casters;
-
-use ImmediateSolutions\Support\Cast\CasterInterface;
+namespace ImmediateSolutions\Support\Api\Casters;
 
 /**
  * @author Igor Vorobiov<igor.vorobioff@gmail.com>
