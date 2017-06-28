@@ -22,7 +22,8 @@
     },
     "autoload": {
         "psr-4": {
-            "ImmediateSolutions\\Support\\": "./"
+            "ImmediateSolutions\\Support\\": "./src",
+            "ImmediateSolutions\\Support\\Tests\\": "./tests"
         },
         "files": [
             "functions.php"
