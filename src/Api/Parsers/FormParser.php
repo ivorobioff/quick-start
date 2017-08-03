@@ -3,6 +3,8 @@ namespace ImmediateSolutions\Support\Api\Parsers;
 
 use ImmediateSolutions\Support\Api\Parsers\Casters\BoolCaster;
 use ImmediateSolutions\Support\Api\Parsers\Casters\CasterInterface;
+use ImmediateSolutions\Support\Api\Parsers\Casters\EnumCaster;
+use ImmediateSolutions\Support\Api\Parsers\Casters\EnumCollectionCaster;
 use ImmediateSolutions\Support\Api\Parsers\Casters\FloatCaster;
 use ImmediateSolutions\Support\Api\Parsers\Casters\IntCaster;
 use ImmediateSolutions\Support\Api\Parsers\Casters\PassCaster;
@@ -80,6 +82,8 @@ class FormParser implements ParserInterface
          * @var CasterInterface[] $casters
          */
         $casters = [
+            new EnumCaster(),
+            new EnumCollectionCaster(),
             new BoolCaster(),
             new FloatCaster(),
             new IntCaster()

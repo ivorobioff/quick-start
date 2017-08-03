@@ -30,7 +30,9 @@ class ParsableProcessorTest extends TestCase
             'field7' => [
                 'test1' => 'test1',
                 'test2' => 'test2'
-            ]
+            ],
+            'field8' => '',
+            'field9' => ['value1', '', 'value2']
         ], 'application/x-www-form-urlencoded');
 
         $data = $processor->getData();
@@ -49,6 +51,10 @@ class ParsableProcessorTest extends TestCase
         Assert::assertEquals('value2', $data['field6']);
         Assert::assertEquals('test1', $data['field7']['test1']);
         Assert::assertEquals('test2', $data['field7']['test2']);
+
+        Assert::assertNull($data['field8']);
+        Assert::assertEquals('value1', $data['field9'][0]);
+        Assert::assertEquals('value2', $data['field9'][1]);
 
         $processor = $this->createProcessorMock(json_encode([
             'field1' => 'some text',
@@ -116,11 +122,10 @@ class ParsableProcessorTest extends TestCase
                     'field3' => 'datetime',
                     'field4' => 'int',
                     'field5' => 'float',
-                    'field6' => new Enum(get_class(new class('value2') extends \ImmediateSolutions\Support\Other\Enum {
-                        const VALUE_1 = 'value1';
-                        const VALUE_2 = 'value2';
-                    })),
-                    'field7' => 'array'
+                    'field6' => new Enum(EnumMock::class),
+                    'field7' => 'array',
+                    'field8' => new Enum(EnumMock::class),
+                    'field9' => [new Enum(EnumMock::class)],
                 ];
             }
 
