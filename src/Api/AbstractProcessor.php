@@ -2,6 +2,7 @@
 namespace ImmediateSolutions\Support\Api;
 
 use ImmediateSolutions\Support\Api\Validation\Rules\DocumentMixedIdentifier;
+use ImmediateSolutions\Support\Other\EnumCollection;
 use ImmediateSolutions\Support\Validation\Binder;
 use ImmediateSolutions\Support\Validation\ErrorsThrowableCollection;
 use ImmediateSolutions\Support\Validation\Performer;
@@ -86,6 +87,33 @@ abstract class AbstractProcessor
 			return new $class($value);
 		};
 	}
+
+    /**
+     * @param string $class
+     * @return Closure
+     */
+    protected function asEnums($class)
+    {
+        return function($value) use ($class){
+
+            /**
+             * @var EnumCollection $collection
+             */
+            $collection = new $class();
+
+            if ($value === null){
+                return $class;
+            }
+
+            $enum = call_user_func($class.'::getEnumClass');
+
+            foreach ($value as $item){
+                $collection->push(new $enum($item));
+            }
+
+            return $collection;
+        };
+    }
 
 	/**
 	 * @return Closure
