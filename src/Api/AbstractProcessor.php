@@ -102,7 +102,7 @@ abstract class AbstractProcessor
             $collection = new $class();
 
             if ($value === null){
-                return $class;
+                return $collection;
             }
 
             $enum = $collection->getEnumClass();
