@@ -105,7 +105,7 @@ abstract class AbstractProcessor
                 return $class;
             }
 
-            $enum = call_user_func($class.'::getEnumClass');
+            $enum = $collection->getEnumClass();
 
             foreach ($value as $item){
                 $collection->push(new $enum($item));
