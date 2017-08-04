@@ -23,4 +23,9 @@ interface SessionInterface
      * @return bool
      */
     public function exists($key);
+
+    /**
+     * @param string $key
+     */
+    public function delete($key);
 }

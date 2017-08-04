@@ -32,4 +32,12 @@ class Session implements SessionInterface
     {
         return array_has($_SESSION, $key);
     }
+
+    /**
+     * @param string $key
+     */
+    public function delete($key)
+    {
+        array_forget($_SESSION, $key);
+    }
 }
