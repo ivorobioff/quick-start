@@ -14,18 +14,18 @@ abstract class AbstractParsableProcessor extends AbstractProcessor
     /**
      * @var array
      */
-    private $parser;
+    private $data;
 
     /**
      * @return array
      */
     public function getData()
     {
-        if ($this->parser === null){
-            $this->parser = $this->findParser()->parse($this->getContentType(), $this->getContent());
+        if ($this->data === null){
+            $this->data = $this->findParser()->parse($this->getContentType(), $this->getContent());
         }
 
-        return $this->parser;
+        return $this->data;
     }
 
     /**
